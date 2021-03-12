@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>applications_aerotech</name>
+  <version>0.1.0</version>
+  <description>AeroTech app package</description>
+  <author>Gustavo Lahr</author>
+  <maintainer email="gustavo.lahr@usp.br">Gustavo Lahr</maintainer>
+  <maintainer email="leonardo.simiao.luna@usp.br">Leonardo Simião de Luna</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>industrial_robot_client</exec_depend>
+  <exec_depend>joint_state_publisher</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rviz</exec_depend>
+  <exec_depend>xacro</exec_depend>
+
+  <export>
+    <architecture_independent/>
+  </export>
+</package>
