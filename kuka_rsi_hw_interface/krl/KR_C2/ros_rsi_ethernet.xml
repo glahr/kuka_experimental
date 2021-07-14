@@ -1,6 +1,6 @@
 <ROOT>
    <CONFIG>
-      <IP_NUMBER>ip.address.of.rospc</IP_NUMBER>   <!-- IP address of PC running kuka_rsi_hardware_interface !-->
+      <IP_NUMBER>192.168.10.15</IP_NUMBER>   <!-- IP address of PC running kuka_rsi_hardware_interface !-->
       <PORT>49152</PORT>                  <!-- Port-number set up for kuka_rsi_hardware_interface !-->
       <PROTOCOL>UDP</PROTOCOL>            <!-- TCP or UDP, Protocol of the socket !-->
       <SENTYPE>ImFree</SENTYPE>           <!-- The name of your system send in <Sen Type="" > !-->
