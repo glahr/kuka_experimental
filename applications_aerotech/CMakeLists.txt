@@ -25,5 +25,8 @@ target_link_libraries(joint_ctrl ${catkin_LIBRARIES})
 catkin_install_python(PROGRAMS script/joint_ctrl.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
+catkin_install_python(PROGRAMS script/simple_action_server_aero.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
 install(DIRECTORY config launch meshes urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
