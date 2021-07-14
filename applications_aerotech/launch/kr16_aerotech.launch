@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+  <include file="$(find kuka_kr16_support)/launch/load_kr16_2.launch" />
+  <node name="joint_ctrl" type="joint_ctrl" pkg="applications_aerotech" output="screen">
+
+</launch>
