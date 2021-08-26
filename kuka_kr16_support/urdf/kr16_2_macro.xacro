@@ -4,6 +4,7 @@
   <xacro:macro name="kuka_kr16_2" params="prefix">
     <!-- LINKS -->
     <!-- base link -->
+    <link name="dummy"/>
     <link name="${prefix}base_link">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -23,6 +24,12 @@
         </geometry>
       </collision>
     </link>
+
+    <joint name="dummy_joint" type="fixed">
+     <parent link="dummy"/>
+     <child link="base_link"/>
+   </joint>
+
     <!-- link 1 (A1) -->
     <link name="${prefix}link_1">
       <inertial>
