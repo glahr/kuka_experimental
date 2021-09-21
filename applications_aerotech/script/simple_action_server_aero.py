@@ -46,7 +46,7 @@ if __name__ == '__main__':
     rospy.init_node('joint_client_py')
     client = actionlib.SimpleActionClient('/position_trajectory_controller/follow_joint_trajectory', control_msgs.msg.FollowJointTrajectoryAction)
     client.wait_for_server()
-    timestep = 0.12
+    timestep = 0.012
     time = 3
     print("server responded!")
     kuka = kr16.KinematicsKR16()
@@ -56,7 +56,7 @@ if __name__ == '__main__':
     # qi = np.array([0, - 1.53846805, 1.884224543, 0, 0.48, 1.57079500])
 
     joint_client(qi)
-    qi = np.array([0, - 1.53846805,  1.884224543, 0, 1.26701762, - 1.57079500])
+    qi = np.array([0, - 1.53846805,  1.884224543, 0, 1.26701762, -np.pi/3])
     joint_client(qi)
     [ti, Ri] = kuka.fk_kr16(qi)
     qn = np.zeros(6)
@@ -102,5 +102,6 @@ if __name__ == '__main__':
     # qm[5] = 0
     qm = np.array([0, - 1.53846805, 1.884224543, 0, 1.26701762, 0])
     joint_client(qm)
+
 
     print("Done!")

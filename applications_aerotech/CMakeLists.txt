@@ -28,5 +28,8 @@ catkin_install_python(PROGRAMS script/joint_ctrl.py
 catkin_install_python(PROGRAMS script/simple_action_server_aero.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
+  catkin_install_python(PROGRAMS script/node_read_joint_states.py
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
 install(DIRECTORY config launch meshes urdf
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
