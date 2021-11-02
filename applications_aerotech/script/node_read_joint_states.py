@@ -13,6 +13,7 @@ log_joints_actual = []
 log_joints_error = []
 log_timestamp = []
 
+
 def callback(joint_states):
     # rospy.loginfo(rospy.get_caller_id() + "I heard %s", joint_states.position)
     # log_joints.append([j for j in joint_states.position])
@@ -20,6 +21,12 @@ def callback(joint_states):
     log_joints_actual.append([j for j in joint_states.feedback.actual.positions])
     log_joints_error.append([j for j in joint_states.feedback.error.positions])
     log_timestamp.append([joint_states.status.goal_id.stamp])
+
+    mqtt_publisher(log_joints_desired[-1], 'joint_state_desired')
+    mqtt_publisher(log_joints_actual[-1], 'joint_state_actual')
+    mqtt_publisher(log_joints_actual[-1], 'joint_state_error')
+    mqtt_publisher(joint_states.status.goal_id.stamp, 'timestamp')
+
 
 def listener():
 
@@ -30,6 +37,13 @@ def listener():
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
+
+
+# function that publishes string to given topic. topic must be available to send to MQTT
+def mqtt_publisher(string, topic):
+    pub = rospy.Publisher(topic, String, queue_size=10)
+    pub.publish(string)
+
 
 if __name__ == '__main__':
     listener()

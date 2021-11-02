@@ -27,5 +27,12 @@
     <!-- Load RSI simulation node -->
     <node name='kuka_rsi_simulator' pkg='kuka_rsi_simulator' type="kuka_rsi_simulator" args="127.0.0.1 49152" if="$(arg sim)" />
 
+    <!-- Load mqtt bridge. Needs mqtt_bridge repository on the workspace -->
+    <!-- link to clone: https://github.com/groove-x/mqtt_bridge.git -->
+    <arg name="use_tls" default="false" />
+    <node name="mqtt_bridge" pkg="mqtt_bridge" type="mqtt_bridge_node.py" output="screen">
+    <rosparam command="load" file="$(find applications_aerotech)/config/bridge_params.yaml" />
+    <rosparam if="$(arg use_tls)" command="load" ns="mqtt" file="$(find mqtt_bridge)/config/tls_params.yaml" />
+
 
 </launch>
