@@ -51,6 +51,7 @@ if __name__ == '__main__':
     print("server responded!")
     kuka = kr16.KinematicsKR16()
     print(kuka)
+    # rospy.wait_for_message("/activate", std_msgs.msg.String)
     qi = np.array([0, - 1.53846805, 1.884224543, 0, 1.26701762, 0])
     # qi = np.array([0, - 1.53846805, 1.884224543, 0, 0.48, 0])
     # qi = np.array([0, - 1.53846805, 1.884224543, 0, 0.48, 1.57079500])

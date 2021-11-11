@@ -2,7 +2,7 @@ mqtt:
   client:
     protocol: 4      # MQTTv311
   connection:
-    host: localhost   # default: localhost
+    host: 18.205.66.44   # default: localhost
     port: 1883  # default: 1883
     keepalive: 60
   private_path: device/001
@@ -29,17 +29,17 @@ bridge:
     topic_to: /file_output_back
   # joint_state_desired
   - factory: mqtt_bridge.bridge:RosToMqttBridge
-    msg_type: std_msgs.msg:String
+    msg_type: std_msgs.msg:Float64
     topic_from: /joint_state_desired
     topic_to: joint_state_desired
   # joint_state_actual
   - factory: mqtt_bridge.bridge:RosToMqttBridge
-    msg_type: std_msgs.msg:String
+    msg_type: std_msgs.msg:Float64
     topic_from: /joint_state_actual
     topic_to: joint_state_actual
   # joint_state_error
   - factory: mqtt_bridge.bridge:RosToMqttBridge
-    msg_type: std_msgs.msg:String
+    msg_type: std_msgs.msg:Float64
     topic_from: /joint_state_error
     topic_to: joint_state_error
   # timestamp
@@ -47,4 +47,8 @@ bridge:
     msg_type: std_msgs.msg:String
     topic_from: /timestamp
     topic_to: timestamp
-
+  # activate
+  - factory: mqtt_bridge.bridge:MqttToRosBridge
+    msg_type: std_msgs.msg:String
+    topic_from: activate
+    topic_to: /activate

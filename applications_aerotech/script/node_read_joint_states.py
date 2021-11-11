@@ -7,6 +7,7 @@ import numpy as np
 import sensor_msgs.msg
 import control_msgs.msg
 import trajectory_msgs.msg
+from std_msgs.msg import String, Float64
 
 log_joints_desired = []
 log_joints_actual = []
@@ -22,10 +23,15 @@ def callback(joint_states):
     log_joints_error.append([j for j in joint_states.feedback.error.positions])
     log_timestamp.append([joint_states.status.goal_id.stamp])
 
-    mqtt_publisher(log_joints_desired[-1], 'joint_state_desired')
-    mqtt_publisher(log_joints_actual[-1], 'joint_state_actual')
-    mqtt_publisher(log_joints_actual[-1], 'joint_state_error')
-    mqtt_publisher(joint_states.status.goal_id.stamp, 'timestamp')
+    # mqtt_publisher(log_joints_desired[-1], Float64, 'joint_state_desired')
+    # mqtt_publisher(log_joints_actual[-1], Float64, 'joint_state_actual')
+    # mqtt_publisher(log_joints_actual[-1], Float64, 'joint_state_error')
+    # mqtt_publisher(joint_states.feedback.desired.positions, Float64[6], 'joint_state_desired')
+    # mqtt_publisher(joint_states.feedback.actual.positions, Float64[6], 'joint_state_actual')
+    # mqtt_publisher(joint_states.feedback.error.positions, Float64[6], 'joint_state_error')
+
+    # publish timestamp to mqtt -- working!
+    # mqtt_publisher(str(joint_states.status.goal_id.stamp), String, 'timestamp')
 
 
 def listener():
@@ -40,9 +46,9 @@ def listener():
 
 
 # function that publishes string to given topic. topic must be available to send to MQTT
-def mqtt_publisher(string, topic):
-    pub = rospy.Publisher(topic, String, queue_size=10)
-    pub.publish(string)
+def mqtt_publisher(message, message_type, topic):
+    pub = rospy.Publisher(topic, message_type, queue_size=10)
+    pub.publish(message)
 
 
 if __name__ == '__main__':
