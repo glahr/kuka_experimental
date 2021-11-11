@@ -1,7 +1,7 @@
 <ROOT>
    <CONFIG>
-      <IP_NUMBER>ip.address.of.rospc</IP_NUMBER>   <!-- IP address of PC running kuka_rsi_hardware_interface !-->
-      <PORT>49152</PORT>                  <!-- Port-number set up for kuka_rsi_hardware_interface !-->
+      <IP_NUMBER>192.168.10.15</IP_NUMBER>   <!-- IP address of PC running kuka_rsi_hardware_interface !-->
+      <PORT>6008</PORT>                  <!-- Port-number set up for kuka_rsi_hardware_interface !-->
       <PROTOCOL>UDP</PROTOCOL>            <!-- TCP or UDP, Protocol of the socket !-->
       <SENTYPE>ImFree</SENTYPE>           <!-- The name of your system send in <Sen Type="" > !-->
       <ONLYSEND>FALSE</ONLYSEND>          <!-- TRUE means the client don't expect answers. Do not send anything to robot !-->
@@ -13,6 +13,12 @@
          <ELEMENT TAG="DEF_AIPos" TYPE="DOUBLE" INDX="INTERNAL" UNIT="0" />
          <ELEMENT TAG="DEF_ASPos" TYPE="DOUBLE" INDX="INTERNAL" UNIT="0" />
          <ELEMENT TAG="DEF_Delay" TYPE="LONG" INDX="INTERNAL" UNIT="0" />
+        <ELEMENT TAG="FTC.Fx" TYPE="DOUBLE" INDX="1" UNIT="3601" />
+	<ELEMENT TAG="FTC.Fy" TYPE="DOUBLE" INDX="2" UNIT="3601" />
+	<ELEMENT TAG="FTC.Fz" TYPE="DOUBLE" INDX="3" UNIT="3601" />
+	<ELEMENT TAG="FTC.Mx" TYPE="DOUBLE" INDX="4" UNIT="3602" />
+	<ELEMENT TAG="FTC.My" TYPE="DOUBLE" INDX="5" UNIT="3602" />
+	<ELEMENT TAG="FTC.Mz" TYPE="DOUBLE" INDX="6" UNIT="3602" />
       </ELEMENTS>
    </SEND>
    <RECEIVE>

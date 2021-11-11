@@ -48,7 +48,7 @@ namespace kuka_rsi_hw_interface
 KukaHardwareInterface::KukaHardwareInterface() :
     joint_position_(6, 0.0), joint_velocity_(6, 0.0), joint_effort_(6, 0.0), joint_position_command_(6, 0.0), joint_velocity_command_(
         6, 0.0), joint_effort_command_(6, 0.0), joint_names_(6), rsi_initial_joint_positions_(6, 0.0), rsi_joint_position_corrections_(
-        6, 0.0), ipoc_(0), n_dof_(6)
+        6, 0.0), ipoc_(0), n_dof_(6), ft_(6, 0.0)
 {
   in_buffer_.resize(1024);
   out_buffer_.resize(1024);
@@ -149,6 +149,7 @@ void KukaHardwareInterface::start()
     joint_position_[i] = DEG2RAD * rsi_state_.positions[i];
     joint_position_command_[i] = joint_position_[i];
     rsi_initial_joint_positions_[i] = rsi_state_.initial_positions[i];
+    ft_[i] = rsi_state_.ft[i];
   }
   ipoc_ = rsi_state_.ipoc;
   out_buffer_ = RSICommand(rsi_joint_position_corrections_, ipoc_).xml_doc;
@@ -163,6 +164,8 @@ void KukaHardwareInterface::configure()
 {
   const std::string param_addr = "rsi/listen_address";
   const std::string param_port = "rsi/listen_port";
+
+
 
   if (nh_.getParam(param_addr, local_host_) && nh_.getParam(param_port, local_port_))
   {

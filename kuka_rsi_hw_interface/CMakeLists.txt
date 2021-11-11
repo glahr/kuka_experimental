@@ -28,10 +28,10 @@ catkin_package(
     joint_limits_interface
     roscpp
     std_msgs
+    mqtt_bridge
   DEPENDS
     TinyXML
 )
-
 
 include_directories(
   include

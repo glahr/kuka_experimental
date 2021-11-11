@@ -70,6 +70,8 @@ public:
   std::vector<double> cart_position;
   // RSol
   std::vector<double> initial_cart_position;
+  // FTC
+  std::vector<double> ft;
   // IPOC
   unsigned long long ipoc;
 
@@ -80,7 +82,8 @@ RSIState::RSIState(std::string xml_doc) :
   positions(6, 0.0),
   initial_positions(6, 0.0),
   cart_position(6, 0.0),
-  initial_cart_position(6, 0.0)
+  initial_cart_position(6, 0.0),
+  ft(6, 0.0)
 {
   // Parse message from robot
   TiXmlDocument bufferdoc;
@@ -119,6 +122,14 @@ RSIState::RSIState(std::string xml_doc) :
   RSol_el->Attribute("A", &initial_cart_position[3]);
   RSol_el->Attribute("B", &initial_cart_position[4]);
   RSol_el->Attribute("C", &initial_cart_position[5]);
+  // Extract cartesian actual forces-torques
+  TiXmlElement* FTC_el = rob->FirstChildElement("FTC");
+  FTC_el->Attribute("Fx", &ft[0]);
+  FTC_el->Attribute("Fy", &ft[1]);
+  FTC_el->Attribute("Fz", &ft[2]);
+  FTC_el->Attribute("Mx", &ft[3]);
+  FTC_el->Attribute("My", &ft[4]);
+  FTC_el->Attribute("Mz", &ft[5]);
   // Get the IPOC timestamp
   TiXmlElement* ipoc_el = rob->FirstChildElement("IPOC");
   ipoc = std::stoull(ipoc_el->FirstChild()->Value());

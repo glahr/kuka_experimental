@@ -135,7 +135,6 @@ public:
         bytes = recvfrom(sockfd_, buffer_, BUFSIZE, 0, (struct sockaddr *) &clientaddr_, &clientlen_);
         if (bytes < 0)
         {
-          std::cout << "ERROR in recvfrom" << std::endl;
         }
       }
       else
@@ -150,7 +149,6 @@ public:
       bytes = recvfrom(sockfd_, buffer_, BUFSIZE, 0, (struct sockaddr *) &clientaddr_, &clientlen_);
       if (bytes < 0)
       {
-        std::cout << "ERROR in recvfrom" << std::endl;
       }
     }
 
@@ -175,4 +173,3 @@ private:
 };
 
 #endif
-

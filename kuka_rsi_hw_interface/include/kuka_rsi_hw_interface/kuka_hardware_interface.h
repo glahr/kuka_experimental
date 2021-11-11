@@ -90,6 +90,7 @@ private:
   std::vector<double> joint_position_command_;
   std::vector<double> joint_velocity_command_;
   std::vector<double> joint_effort_command_;
+  std::vector<double> ft_;
 
   // RSI
   RSIState rsi_state_;

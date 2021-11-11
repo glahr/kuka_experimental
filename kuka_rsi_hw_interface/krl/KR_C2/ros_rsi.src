@@ -1,5 +1,5 @@
 &ACCESS RVP
-&REL 54
+&REL 64
 &PARAM TEMPLATE = C:\KRC\Roboter\Template\vorgabe
 &PARAM EDITMASK = *
 DEF ros_rsi( )
@@ -48,7 +48,7 @@ DEF ros_rsi( )
   REAL lowerBound[12], upperBound[12]                ;Bounds for motion control
   INT i                                      ;Counter variable used in for-loops
   DECL AXIS HOME                             ; HOME position
-  INT containerID, hEthernet, hAxis, numAxes ;Container IDs
+  INT containerID, hEthernet, hAxis, numAxes, hFT ;Container IDs
 ; ENDFOLD VAR DECLARATION
 
 ;FOLD INI
@@ -96,9 +96,10 @@ DEF ros_rsi( )
   lowerBound[12] = -100    ; lower limit E6 axis correction
   upperBound[12] =  100    ; upper limit E6 axis correction
 
-
+  
 
 ;ENDFOLD Configuration
+
 
 
 ; Move to start position
@@ -114,6 +115,22 @@ ENDIF
 
 ; Object for axis correction.
 err = ST_AXISCORR(hAxis, containerID)
+IF (err <> #RSIOK) THEN
+  HALT
+ENDIF
+
+;FOLD FT_ETHERNET config
+;SEND THE FORCE AND TORQUE VALUES TO PC!!!!!!!
+err = ST_FTSENS(hFT,containerID,#ATIDAQ)
+err = ST_NEWLINK(hFT,1,hEthernet,1)
+err = ST_NEWLINK(hFT,2,hEthernet,2) 
+err = ST_NEWLINK(hFT,3,hEthernet,3)
+err = ST_NEWLINK(hFT,6,hEthernet,4)
+err = ST_NEWLINK(hFT,5,hEthernet,5)
+err = ST_NEWLINK(hFT,4,hEthernet,6)
+
+;ENDFOLD
+err=ST_SETPARAM(hFT,1,0)
 IF (err <> #RSIOK) THEN
   HALT
 ENDIF
