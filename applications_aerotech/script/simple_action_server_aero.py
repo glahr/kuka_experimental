@@ -47,7 +47,7 @@ if __name__ == '__main__':
     client = actionlib.SimpleActionClient('/position_trajectory_controller/follow_joint_trajectory', control_msgs.msg.FollowJointTrajectoryAction)
     client.wait_for_server()
     timestep = 0.012
-    time = 3
+    time = 1.5
     print("server responded!")
     kuka = kr16.KinematicsKR16()
     print(kuka)

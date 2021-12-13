@@ -29,10 +29,10 @@
 
     <!-- Load mqtt bridge. Needs mqtt_bridge repository on the workspace -->
     <!-- link to clone: https://github.com/groove-x/mqtt_bridge.git -->
-    <!-- <arg name="use_tls" default="false" />
+    <arg name="use_tls" default="false" />
     <node name="mqtt_bridge" pkg="mqtt_bridge" type="mqtt_bridge_node.py" output="screen" >
       <rosparam command="load" file="$(find applications_aerotech)/config/bridge_params.yaml" />
       <rosparam if="$(arg use_tls)" command="load" ns="mqtt" file="$(find mqtt_bridge)/config/tls_params.yaml" />
-    </node> -->
+    </node>
 
 </launch>

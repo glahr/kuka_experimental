@@ -7,7 +7,7 @@ import numpy as np
 import sensor_msgs.msg
 import control_msgs.msg
 import trajectory_msgs.msg
-from std_msgs.msg import String, Float64
+from std_msgs.msg import String, Float64, Float64MultiArray
 
 log_joints_desired = []
 log_joints_actual = []
@@ -16,7 +16,7 @@ log_timestamp = []
 
 
 def callback(joint_states):
-    # rospy.loginfo(rospy.get_caller_id() + "I heard %s", joint_states.position)
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", joint_states.status.goal_id.stamp)
     # log_joints.append([j for j in joint_states.position])
     log_joints_desired.append([j for j in joint_states.feedback.desired.positions])
     log_joints_actual.append([j for j in joint_states.feedback.actual.positions])
@@ -26,12 +26,12 @@ def callback(joint_states):
     # mqtt_publisher(log_joints_desired[-1], Float64, 'joint_state_desired')
     # mqtt_publisher(log_joints_actual[-1], Float64, 'joint_state_actual')
     # mqtt_publisher(log_joints_actual[-1], Float64, 'joint_state_error')
-    # mqtt_publisher(joint_states.feedback.desired.positions, Float64[6], 'joint_state_desired')
-    # mqtt_publisher(joint_states.feedback.actual.positions, Float64[6], 'joint_state_actual')
-    # mqtt_publisher(joint_states.feedback.error.positions, Float64[6], 'joint_state_error')
+    mqtt_publisher(joint_states.feedback.desired.positions, Float64MultiArray, 'joint_state_desired')
+    mqtt_publisher(joint_states.feedback.actual.positions, Float64MultiArray, 'joint_state_actual')
+    mqtt_publisher(joint_states.feedback.error.positions, Float64MultiArray, 'joint_state_error')
 
     # publish timestamp to mqtt -- working!
-    # mqtt_publisher(str(joint_states.status.goal_id.stamp), String, 'timestamp')
+    mqtt_publisher(str(joint_states.status.goal_id.stamp), String, 'timestamp')
 
 
 def listener():
@@ -47,6 +47,11 @@ def listener():
 
 # function that publishes string to given topic. topic must be available to send to MQTT
 def mqtt_publisher(message, message_type, topic):
+    if message_type == Float64MultiArray:
+        message_content = message
+        message = Float64MultiArray()
+        message.data = [float(j) for j in message_content]
+
     pub = rospy.Publisher(topic, message_type, queue_size=10)
     pub.publish(message)
 
