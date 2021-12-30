@@ -2,7 +2,7 @@ mqtt:
   client:
     protocol: 4      # MQTTv311
   connection:
-    host: 44.192.18.124   # default: localhost
+    host: 18.210.23.39   # default: localhost
     port: 1883  # default: 1883
     keepalive: 60
   private_path: device/001
@@ -42,6 +42,11 @@ bridge:
     msg_type: std_msgs.msg:Float64MultiArray
     topic_from: /joint_state_error
     topic_to: joint_state_error
+  # joint_state_feedback
+  - factory: mqtt_bridge.bridge:RosToMqttBridge
+    msg_type: control_msgs.msg:FollowJointTrajectoryFeedback
+    topic_from: /joint_state_feedback
+    topic_to: joint_state_feedback
   # timestamp
   - factory: mqtt_bridge.bridge:RosToMqttBridge
     msg_type: std_msgs.msg:String

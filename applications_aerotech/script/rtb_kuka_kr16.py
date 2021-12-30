@@ -140,4 +140,3 @@ if __name__ == '__main__':
     # print(t)
     # q1 = kuka.ik_kr16(t, R, qz)
     # print(q1)
-

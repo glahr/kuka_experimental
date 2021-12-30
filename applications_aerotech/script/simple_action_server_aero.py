@@ -52,17 +52,27 @@ if __name__ == '__main__':
     kuka = kr16.KinematicsKR16()
     print(kuka)
     # rospy.wait_for_message("/activate", std_msgs.msg.String)
+    # qi = np.array([0, - 1.53846805, 1.53846805, 0, np.pi/2, 0])
     qi = np.array([0, - 1.53846805, 1.884224543, 0, 1.26701762, 0])
     # qi = np.array([0, - 1.53846805, 1.884224543, 0, 0.48, 0])
     # qi = np.array([0, - 1.53846805, 1.884224543, 0, 0.48, 1.57079500])
 
     joint_client(qi)
+    # qi = np.array([0, - 1.53846805,  1.53846805, 0, np.pi/2, -np.pi/3])
+    qm = qi
     qi = np.array([0, - 1.53846805,  1.884224543, 0, 1.26701762, -np.pi/3])
     joint_client(qi)
     [ti, Ri] = kuka.fk_kr16(qi)
     qn = np.zeros(6)
     tn = np.zeros(3)
+    # cartesian_moves = np.zeros([3, 3])
     cartesian_moves = np.zeros([7, 3])
+    # cartesian_moves[0] = [0, 0, -0.1]
+    # cartesian_moves[0] = [0, 0, 0.1]
+    # cartesian_moves[0] = [0, 0, 0.1]
+
+
+    ### Movimentações sendo utilizadas
     cartesian_moves[0] = [0, 0, -0.2]
     cartesian_moves[1] = [0, 0.45, 0]
     cartesian_moves[2] = [0.4, 0, 0]
@@ -101,7 +111,7 @@ if __name__ == '__main__':
         # qi = qn
 
     # qm[5] = 0
-    qm = np.array([0, - 1.53846805, 1.884224543, 0, 1.26701762, 0])
+    # qm = np.array([0, - 1.53846805, 1.884224543, 0, 1.26701762, 0])
     joint_client(qm)
 
 
