@@ -9,17 +9,31 @@ from copy import deepcopy
 
 
 class KinematicsKR16(rtb.DHRobot):
-    def __init__(self):
-        super().__init__(
-            [
-                rtb.RevoluteDH(d= 0.675, a= 0.26, alpha= -pi / 2),
-                rtb.RevoluteDH(a=0.68),
-                rtb.RevoluteDH(a=-0.035, alpha=pi / 2, offset= -pi / 2),
-                rtb.RevoluteDH(d=-0.67, alpha=-pi / 2),
-                rtb.RevoluteDH(alpha=pi / 2),
-                rtb.RevoluteDH(d=-0.158, alpha=pi, offset=pi)
-            ], name="KukaKR16"
-        )
+    def __init__(self, tool=None):
+        if tool is None:
+            super().__init__(
+                [
+                    rtb.RevoluteDH(d= 0.675, a= 0.26, alpha= -pi / 2),
+                    rtb.RevoluteDH(a=0.68),
+                    rtb.RevoluteDH(a=-0.035, alpha=pi / 2, offset= -pi / 2),
+                    rtb.RevoluteDH(d=-0.67, alpha=-pi / 2),
+                    rtb.RevoluteDH(alpha=pi / 2),
+                    rtb.RevoluteDH(d=-0.158, alpha=pi, offset=pi)
+                ], name="KukaKR16"
+            )
+        else:
+            super().__init__(
+                [
+                    rtb.RevoluteDH(d= 0.675, a= 0.26, alpha= -pi / 2),
+                    rtb.RevoluteDH(a=0.68),
+                    rtb.RevoluteDH(a=-0.035, alpha=pi / 2, offset= -pi / 2),
+                    rtb.RevoluteDH(d=-0.67, alpha=-pi / 2),
+                    rtb.RevoluteDH(alpha=pi / 2),
+                    rtb.RevoluteDH(d=tool[0], a=tool[1], alpha=tool[2], offset=tool[3])
+                    # double_tool: rtb.RevoluteDH(d=-0.512, a=0.036, alpha=pi, offset=pi)
+                    # no_tool: rtb.RevoluteDH(d=-0.158, alpha=pi, offset=pi)
+                ], name="KukaKR16"
+            )
         self.k = 0
         # self.q = None
         # self.qvel = None
@@ -108,34 +122,36 @@ if __name__ == '__main__':
     qr = np.zeros([8, 6])
     tr = np.zeros([8, 3])
     print(kuka)
-    [ti, Ri] = kuka.fk_kr16(qi)
-    print(ti)
-    print("HERE!!!!")
-    t2 = ti + [-0.5, 0, 0]
-    kuka.traj_cart_generate(t2, Ri, ti, Ri)
-    [t, _, _, quat_d, _, _, R] = kuka.traj_cart_get_point()
-    [t, _, _, quat_d, _, _, R] = kuka.traj_cart_get_point()
-    print(t)
-    print("QUATD!!!")
-    print(quat_d)
-    [t, _, _, quat_d, _, _] = kuka.traj_cart_get_point()
-    print(t)
-    print("QUATD!!!")
-    print(quat_d)
-    [qr[0], tr[0]] = kuka.cartesian_change(qi, [-0.5, 0, 0])
-    [qr[1], tr[1]] = kuka.cartesian_change(qr[0], [0, 0, -0.2])
-    [qr[2], tr[2]] = kuka.cartesian_change(qr[1], [0, 0.2, 0])
-    [qr[3], tr[3]] = kuka.cartesian_change(qr[2], [0.4, 0, 0])
-    [qr[4], tr[4]] = kuka.cartesian_change(qr[3], [0, -0.4, 0])
-    [qr[5], tr[5]] = kuka.cartesian_change(qr[4], [-0.4, 0, 0])
-    [qr[6], tr[6]] = kuka.cartesian_change(qr[5], [0, 0.2, 0])
-    [qr[7], tr[7]] = kuka.cartesian_change(qr[6], [0, 0, 0.2])
-    print(qr)
-
-
-    # # fk = kuka.fkine(qz)
-    # [t, R] = kuka.fk_kr16(qz)
+    # [ti, Ri] = kuka.fk_kr16(qi)
+    # print(ti)
+    # print("HERE!!!!")
+    # t2 = ti + [-0.5, 0, 0]
+    # kuka.traj_cart_generate(t2, Ri, ti, Ri)
+    # [t, _, _, quat_d, _, _, R] = kuka.traj_cart_get_point()
+    # [t, _, _, quat_d, _, _, R] = kuka.traj_cart_get_point()
     # print(t)
+    # print("QUATD!!!")
+    # print(quat_d)
+    # [t, _, _, quat_d, _, _, R] = kuka.traj_cart_get_point()
+    # print(t)
+    # print("QUATD!!!")
+    # print(quat_d)
+    # [qr[0], tr[0]] = kuka.cartesian_change(qi, [-0.5, 0, 0])
+    # [qr[1], tr[1]] = kuka.cartesian_change(qr[0], [0, 0, -0.2])
+    # [qr[2], tr[2]] = kuka.cartesian_change(qr[1], [0, 0.2, 0])
+    # [qr[3], tr[3]] = kuka.cartesian_change(qr[2], [0.4, 0, 0])
+    # [qr[4], tr[4]] = kuka.cartesian_change(qr[3], [0, -0.4, 0])
+    # [qr[5], tr[5]] = kuka.cartesian_change(qr[4], [-0.4, 0, 0])
+    # [qr[6], tr[6]] = kuka.cartesian_change(qr[5], [0, 0.2, 0])
+    # [qr[7], tr[7]] = kuka.cartesian_change(qr[6], [0, 0, 0.2])
+    # print(qr)
+
+    # qz = np.zeros([1, 6])
+    qz = np.array([0, 0, 0, 0, -pi/2, -pi/2])
+    fk = kuka.fkine(qz)
+    [t, R] = kuka.fk_kr16(qz)
+    print(t)
+    print(R)
     # t[0] = t[0] - 0.2
     # print(t)
     # q1 = kuka.ik_kr16(t, R, qz)

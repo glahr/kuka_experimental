@@ -37,30 +37,34 @@ def joint_client(pointdesired, dt=3):
     client.send_goal(goal)
     client.wait_for_result()
 
-
-
-
     return 0
+
 
 if __name__ == '__main__':
     rospy.init_node('joint_client_py')
-    client = actionlib.SimpleActionClient('/position_trajectory_controller/follow_joint_trajectory', control_msgs.msg.FollowJointTrajectoryAction)
+    client = actionlib.SimpleActionClient('/position_trajectory_controller/follow_joint_trajectory',
+                                          control_msgs.msg.FollowJointTrajectoryAction)
     client.wait_for_server()
     timestep = 0.012
     time = 1.5
     print("server responded!")
-    kuka = kr16.KinematicsKR16()
+    kuka = kr16.KinematicsKR16([-0.512, 0.036, pi, pi])
+    # parameters: rtb.RevoluteDH(d=-0.512, a=0.036, alpha=pi, offset=pi)
     print(kuka)
     # rospy.wait_for_message("/activate", std_msgs.msg.String)
+
+    # initial position:
+    qi = np.array([0, - pi / 2, pi / 2, 0, pi * 105 / 180, 0])  # with tool
+    # qi = np.array([0, - 1.53846805, 1.884224543, 0, 1.26701762, 0])  # withouttool
     # qi = np.array([0, - 1.53846805, 1.53846805, 0, np.pi/2, 0])
-    qi = np.array([0, - 1.53846805, 1.884224543, 0, 1.26701762, 0])
+
     # qi = np.array([0, - 1.53846805, 1.884224543, 0, 0.48, 0])
     # qi = np.array([0, - 1.53846805, 1.884224543, 0, 0.48, 1.57079500])
 
     joint_client(qi)
     # qi = np.array([0, - 1.53846805,  1.53846805, 0, np.pi/2, -np.pi/3])
     qm = qi
-    qi = np.array([0, - 1.53846805,  1.884224543, 0, 1.26701762, -np.pi/3])
+    qi = np.array([0, - 1.53846805, 1.884224543, 0, 1.26701762, -np.pi / 3])
     joint_client(qi)
     [ti, Ri] = kuka.fk_kr16(qi)
     qn = np.zeros(6)
@@ -70,7 +74,6 @@ if __name__ == '__main__':
     # cartesian_moves[0] = [0, 0, -0.1]
     # cartesian_moves[0] = [0, 0, 0.1]
     # cartesian_moves[0] = [0, 0, 0.1]
-
 
     ### Movimentações sendo utilizadas
     cartesian_moves[0] = [0, 0, -0.2]
@@ -95,15 +98,14 @@ if __name__ == '__main__':
         # qi = qm
         # ti = td
         ###
-        t_delta = cartesian_moves[i] * timestep/time
-        for j in np.arange(time/timestep):
+        t_delta = cartesian_moves[i] * timestep / time
+        for j in np.arange(time / timestep):
             [qn, tn] = kuka.cartesian_change(qi, t_delta)
             joint_client(qn, timestep)
             qi = qn
         T_compare = kuka.fkine(qi)
         if ((T_compare.t == cartesian_moves[i]).all()):
             print("Success")
-
 
         # [qn, tn] = kuka.cartesian_change(qi, cartesian_moves[i])
         # # print(qi)
@@ -113,6 +115,5 @@ if __name__ == '__main__':
     # qm[5] = 0
     # qm = np.array([0, - 1.53846805, 1.884224543, 0, 1.26701762, 0])
     joint_client(qm)
-
 
     print("Done!")
