@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <launch>
 
-    <param name="robot_description" command="$(find xacro)/xacro.py '$(find kuka_kr16_support)/urdf/kr16_2.xacro'"/>
+    <param name="robot_description" command="$(find xacro)/xacro.py '$(find kuka_kr16_support)/urdf/kr16_2_with_tool.xacro'"/>
     <arg name="sim" default="true" />
 
     <rosparam file="$(find kuka_rsi_hw_interface)/test/test_params_sim.yaml" command="load" if="$(arg sim)"/>
