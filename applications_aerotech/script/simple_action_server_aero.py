@@ -75,6 +75,23 @@ def cartesian_move(movement_list, q0, time=3):
     return q0
 
 
+def circular_move(movement_list, radius, q0, time=3):
+    movement = np.array(movement_list)
+    print(movement)
+    if movement[0] == 0:
+        vertix = [radius, movement[1]/2, 0]
+        print(vertix)
+    else:
+        vertix = [float(movement_list[0])/2,radius, 0]
+        print(vertix)
+    [qn, tn] = machine.tool.DHRobot.cartesian_change(q0, vertix)
+    joint_client(qn, time)
+    [qn, tn] = machine.tool.DHRobot.cartesian_change(q0, movement)
+    joint_client(qn, time)
+    return qn
+
+
+
 def  go_to_work_height(q_safe, robot):
     q_current = cartesian_move([0, 0, robot.tool.work_height], q_safe, 1.5)
     return q_current
@@ -98,16 +115,19 @@ if __name__ == '__main__':
 
     # kuka = kr16.KinematicsKR16([-0.512, 0.036, pi, pi])
     # parameters: rtb.RevoluteDH(d=-0.512, a=0.036, alpha=pi, offset=pi)
-
-    ballpoint = Tool('ballpoint', [-0.512, 0.036, pi, pi], -0.033, pi/2)
-    marker = Tool('marker', [-0.512, 0.036, pi, pi], -0.038, -pi/2)
+    ballpoint = Tool('ballpoint', [-0.512, 0.036, pi, pi/2], -0.033, pi/2)
+    marker = Tool('marker', [-0.512, 0.036, pi, 3*pi/2], -0.038, -pi/2)
     machine = Robot()
+
+    rospy.set_param('operation_name', 'Square')
 
     print(machine.tool.DHRobot)
 
     # rospy.wait_for_message("/activate", std_msgs.msg.String)
 
     '''initial position in radians for alll 6 joints:'''
+
+    # q_initial = np.array([0, - pi * 75/ 180, pi * 75 / 180, pi * 30 /180, pi * 75/ 180, -pi/2]) # test with angulated tool
     q_initial = np.array([0, - pi / 2, pi / 2, 0, pi * 105 / 180, 0])  # with tool
     # q_initial = np.array([0, - 1.53846805, 1.884224543, 0, 1.26701762, 0])  # withouttool
     joint_client(q_initial)
@@ -121,30 +141,56 @@ if __name__ == '__main__':
     q_current = go_to_safe_height(q_safe, machine)
     q_current = machine.SetTool(ballpoint, q_safe)
 
+    '''Second Experiment'''
+    q_current = cartesian_move([0.15, 0.05, 0], q_current, 1.5)
     q_current = go_to_work_height(q_current, machine) # ballpoint = -0.033
 
-    q_current = cartesian_move([0, -0.18, 0], q_current, 1.5)
-    q_current = cartesian_move([0.17, 0, 0], q_current, 1.5)
-    q_current = cartesian_move([0, 0.17, 0], q_current, 1.5)
-    q_current = cartesian_move([-0.17, 0, 0], q_current, 1.5)
-    q_current = cartesian_move([0, 0.01, 0], q_current, 1)
+    q_current = cartesian_move([0.11, 0.11, 0], q_current, 1.5)
+    q_current = cartesian_move([-0.10, 0.10, 0], q_current, 1.5)
+    q_current = cartesian_move([-0.10, -0.10, 0], q_current, 1.5)
+    q_current = cartesian_move([0.10, -0.10, 0], q_current, 1.5)
+    q_current = cartesian_move([0.01, -0.01, 0], q_current, 1)
 
     q_current = go_to_safe_height(q_safe, machine, 2)
 
     q_current = machine.SetTool(marker, q_safe)
 
+    q_current = cartesian_move([0.15, 0.05, 0], q_current, 1.5)
     q_current = go_to_work_height(q_current, machine)
     # q_current = cartesian_move([0, 0, -0.038], q_safe, 1.5)
-    q_current = cartesian_move([0, -0.18, 0], q_current, 1.5)
-    q_current = cartesian_move([0.17, 0, 0], q_current, 1.5)
-    q_current = cartesian_move([0, 0.17, 0], q_current, 1.5)
-    q_current = cartesian_move([-0.17, 0, 0], q_current, 1.5)
-    q_current = cartesian_move([0, 0.01, 0], q_current, 1)
+    q_current = cartesian_move([0.11, 0.11, 0], q_current, 1.5)
+    q_current = cartesian_move([-0.10, 0.10, 0], q_current, 1.5)
+    q_current = cartesian_move([-0.10, -0.10, 0], q_current, 1.5)
+    q_current = cartesian_move([0.10, -0.10, 0], q_current, 1.5)
+    q_current = cartesian_move([0.01, -0.01, 0], q_current, 1)
     # #
-    # joint_client(q_safe, 2)
+    joint_client(q_safe, 2)
     q_current = go_to_safe_height(q_safe, machine, 2)
-
+    '''End of Second Experiment'''
+    '''Initial Experiment'''
+    # q_current = go_to_work_height(q_current, machine) # ballpoint = -0.033
+    #
+    # q_current = cartesian_move([0, -0.21, 0], q_current, 1.5)
+    # q_current = cartesian_move([0.20, 0, 0], q_current, 1.5)
+    # q_current = cartesian_move([0, 0.20, 0], q_current, 1.5)
+    # q_current = cartesian_move([-0.20, 0, 0], q_current, 1.5)
+    # q_current = cartesian_move([0, 0.01, 0], q_current, 1)
+    #
+    # q_current = go_to_safe_height(q_safe, machine, 2)
+    #
+    # q_current = machine.SetTool(marker, q_safe)
+    #
+    # q_current = go_to_work_height(q_current, machine)
+    # # q_current = cartesian_move([0, 0, -0.038], q_safe, 1.5)
+    # q_current = cartesian_move([0, -0.21, 0], q_current, 1.5)
+    # q_current = cartesian_move([0.20, 0, 0], q_current, 1.5)
+    # q_current = cartesian_move([0, 0.20, 0], q_current, 1.5)
+    # q_current = cartesian_move([-0.20, 0, 0], q_current, 1.5)
+    # q_current = cartesian_move([0, 0.01, 0], q_current, 1)
+    # # #
+    # joint_client(q_safe, 2)
     print("Done!")
+    '''End of initial Experiment'''
 
     #this sequence was working
     # [ti, Ri] = kuka.fk_kr16(qi)
