@@ -56,7 +56,8 @@ public:
     positions(6, 0.0),
     initial_positions(6, 0.0),
     cart_position(6, 0.0),
-    initial_cart_position(6, 0.0)
+    initial_cart_position(6, 0.0),
+    ft(6, 0.0)
   {
     xml_doc_.resize(1024);
   }

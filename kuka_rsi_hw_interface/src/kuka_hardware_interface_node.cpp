@@ -60,6 +60,7 @@ int main(int argc, char** argv)
   auto stopwatch_now = stopwatch_last;
 
   controller_manager::ControllerManager controller_manager(&kuka_rsi_hw_interface, nh);
+  ros::Publisher ft_pub = nh.advertise<geometry_msgs::WrenchStamped>("ft_sensor_data", 10);
 
   kuka_rsi_hw_interface.start();
 
@@ -74,7 +75,7 @@ int main(int argc, char** argv)
   //while (!g_quit)
   {
     // Receive current state from robot
-    if (!kuka_rsi_hw_interface.read(timestamp, period))
+    if (!kuka_rsi_hw_interface.read(timestamp, period, ft_pub))
     {
       ROS_FATAL_NAMED("kuka_hardware_interface", "Failed to read state from robot. Shutting down!");
       ros::shutdown();

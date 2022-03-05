@@ -48,7 +48,7 @@ namespace kuka_rsi_hw_interface
 KukaHardwareInterface::KukaHardwareInterface() :
     joint_position_(6, 0.0), joint_velocity_(6, 0.0), joint_effort_(6, 0.0), joint_position_command_(6, 0.0), joint_velocity_command_(
         6, 0.0), joint_effort_command_(6, 0.0), joint_names_(6), rsi_initial_joint_positions_(6, 0.0), rsi_joint_position_corrections_(
-        6, 0.0), ipoc_(0), n_dof_(6), ft_(6, 0.0)
+        6, 0.0), ipoc_(0), n_dof_(6), f_(3, 0.0), t_(3, 0.0)
 {
   in_buffer_.resize(1024);
   out_buffer_.resize(1024);
@@ -77,9 +77,15 @@ KukaHardwareInterface::KukaHardwareInterface() :
                                         &joint_position_command_[i]));
   }
 
+  //ft sensor interface
+  ft_interface_.registerHandle(
+    hardware_interface::ForceTorqueSensorHandle("ft_sensor", "ft_sensor", &f_[0], &t_[0])
+  );
+
   // Register interfaces
   registerInterface(&joint_state_interface_);
   registerInterface(&position_joint_interface_);
+  registerInterface(&ft_interface_);
 
   ROS_INFO_STREAM_NAMED("hardware_interface", "Loaded kuka_rsi_hardware_interface");
 }
@@ -89,7 +95,7 @@ KukaHardwareInterface::~KukaHardwareInterface()
 
 }
 
-bool KukaHardwareInterface::read(const ros::Time time, const ros::Duration period)
+bool KukaHardwareInterface::read(const ros::Time time, const ros::Duration period, const ros::Publisher ft_pub)
 {
   in_buffer_.resize(1024);
 
@@ -108,6 +114,19 @@ bool KukaHardwareInterface::read(const ros::Time time, const ros::Duration perio
   {
     joint_position_[i] = DEG2RAD * rsi_state_.positions[i];
   }
+
+  ft_data.header.frame_id = "ft_sensor";
+
+  ft_data.wrench.force.x = rsi_state_.ft[0];
+  ft_data.wrench.force.y = rsi_state_.ft[1];
+  ft_data.wrench.force.z = rsi_state_.ft[2];
+
+  ft_data.wrench.torque.x = rsi_state_.ft[3];
+  ft_data.wrench.torque.y = rsi_state_.ft[4];
+  ft_data.wrench.torque.z = rsi_state_.ft[5];
+
+  ft_pub.publish(ft_data);
+
   ipoc_ = rsi_state_.ipoc;
 
   return true;
@@ -149,8 +168,14 @@ void KukaHardwareInterface::start()
     joint_position_[i] = DEG2RAD * rsi_state_.positions[i];
     joint_position_command_[i] = joint_position_[i];
     rsi_initial_joint_positions_[i] = rsi_state_.initial_positions[i];
-    ft_[i] = rsi_state_.ft[i];
   }
+  f_[0] = rsi_state_.ft[0];
+  f_[1] = rsi_state_.ft[1];
+  f_[2] = rsi_state_.ft[2];
+  t_[0] = rsi_state_.ft[3];
+  t_[1] = rsi_state_.ft[4];
+  t_[2] = rsi_state_.ft[5];
+
   ipoc_ = rsi_state_.ipoc;
   out_buffer_ = RSICommand(rsi_joint_position_corrections_, ipoc_).xml_doc;
   server_->send(out_buffer_);

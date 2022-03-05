@@ -55,6 +55,8 @@
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/joint_state_interface.h>
 #include <hardware_interface/robot_hw.h>
+#include <hardware_interface/force_torque_sensor_interface.h>
+#include <geometry_msgs/WrenchStamped.h>
 
 // Timers
 #include <chrono>
@@ -90,7 +92,9 @@ private:
   std::vector<double> joint_position_command_;
   std::vector<double> joint_velocity_command_;
   std::vector<double> joint_effort_command_;
-  std::vector<double> ft_;
+  std::vector<double> f_;
+  std::vector<double> t_;
+  geometry_msgs::WrenchStamped ft_data;
 
   // RSI
   RSIState rsi_state_;
@@ -117,6 +121,7 @@ private:
   // Interfaces
   hardware_interface::JointStateInterface joint_state_interface_;
   hardware_interface::PositionJointInterface position_joint_interface_;
+  hardware_interface::ForceTorqueSensorInterface ft_interface_;
 
 public:
 
@@ -125,7 +130,7 @@ public:
 
   void start();
   void configure();
-  bool read(const ros::Time time, const ros::Duration period);
+  bool read(const ros::Time time, const ros::Duration period, const ros::Publisher ft_pub);
   bool write(const ros::Time time, const ros::Duration period);
 
 };
