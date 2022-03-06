@@ -2,7 +2,7 @@ mqtt:
   client:
     protocol: 4      # MQTTv311
   connection:
-    host: 18.210.23.39   # default: localhost
+    host: 3.239.10.202   # default: localhost
     port: 1883  # default: 1883
     keepalive: 60
   private_path: device/001
@@ -52,8 +52,23 @@ bridge:
     msg_type: std_msgs.msg:String
     topic_from: /timestamp
     topic_to: timestamp
+  # ft_sensor
+  - factory: mqtt_bridge.bridge:RosToMqttBridge
+    msg_type: geometry_msgs.msg:WrenchStamped
+    topic_from: /ft_sensor
+    topic_to: ft_sensor
   # activate
   - factory: mqtt_bridge.bridge:MqttToRosBridge
     msg_type: std_msgs.msg:String
     topic_from: activate
     topic_to: /activate
+  # ask_supervisor
+  - factory: mqtt_bridge.bridge:MqttToRosBridge
+    msg_type: std_msgs.msg:String
+    topic_from: ask_supervisor
+    topic_to: /ask_supervisor
+  # supervisor_reply
+  - factory: mqtt_bridge.bridge:RosToMqttBridge
+    msg_type: std_msgs.msg:String
+    topic_from: /supervisor_reply
+    topic_to: supervisor_reply
